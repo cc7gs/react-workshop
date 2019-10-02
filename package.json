@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "dev": "parcel src/index.html --port 3000 ",
-    "dev:mock":"cross-env PET_MOCK=mock npm run dev",
+    "dev:mock": "cross-env PET_MOCK=mock npm run dev",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "eslint \"src/**/*{js,jsx}\" --quiet ",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -26,8 +26,9 @@
   },
   "dependencies": {
     "@frontendmasters/pet": "^1.0.3",
-    "react": "^16.10.0",
-    "react-dom": "^16.10.0"
+    "@reach/router": "^1.2.1",
+    "react": "^16.10.1",
+    "react-dom": "^16.10.1"
   },
   "browserslist": [
     "last 2 Chrome versions",
