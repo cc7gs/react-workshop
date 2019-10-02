@@ -27,9 +27,7 @@ const SearchParams = () => {
         });
         setPets(animals||[]);
     }
-    useEffect(()=>{
-        console.log(pets,'pets')
-    },[pets])
+    
     return (
         <div className="search-params">
             <form

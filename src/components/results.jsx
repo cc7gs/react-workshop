@@ -2,8 +2,7 @@ import React from 'react'
 import Pet from '../Pet'
 
 export default({pets})=>{
-    console.log(pets,'pets')
-return (
+return ( 
    <div className="search">
        {
            !pets.length?(
