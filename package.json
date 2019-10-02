@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "dev": "parcel src/index.html --port 3000 ",
+    "dev:mock":"cross-env PET_MOCK=mock npm run dev",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "eslint \"src/**/*{js,jsx}\" --quiet ",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "babel-eslint": "^10.0.3",
+    "cross-env": "^6.0.0",
     "eslint": "^6.4.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
@@ -23,7 +25,19 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
+    "@frontendmasters/pet": "^1.0.3",
     "react": "^16.10.0",
     "react-dom": "^16.10.0"
-  }
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 ChromeAndroid versions",
+    "last 2 Firefox versions",
+    "last 2 FirefoxAndroid versions",
+    "last 2 Safari versions",
+    "last 2 iOS versions",
+    "last 2 Edge versions",
+    "last 2 Opera versions",
+    "last 2 OperaMobile versions"
+  ]
 }

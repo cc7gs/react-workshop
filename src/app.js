@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Pet from './Pet'
+import SearchParams from './SearchParams'
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
         name="Luna"
         animal="dog"
         breed="Havanes" />
+        <SearchParams/>
     </div>
   )
 }
