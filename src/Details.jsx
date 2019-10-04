@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
 import pet from "@frontendmasters/pet";
+import ErrorBoundary from './ErrorBoundary'
 import Carousel from './components/Carousel'
-export default class Details extends Component {
-    state={
-        loading:false
+
+
+export default function DetailsErrorBoundary(props) {
+    return (<ErrorBoundary>
+        <Details {...props} />
+    </ErrorBoundary>)
+}
+class Details extends Component {
+    state = {
+        loading: false
     }
-    
     componentDidMount() {
         pet.animal(+this.props.id)
             .then(({ animal }) => {
@@ -27,10 +34,10 @@ export default class Details extends Component {
         if (this.state.loading) {
             return <h1>loading … </h1>;
         }
-        const {animal,breed,location,name,description,media}=this.state
+        const { animal, breed, location, name, description, media } = this.state
         return (
             <div className="details">
-                <Carousel media={media}/>
+                <Carousel media={media} />
                 <div>
                     <h1>{name}</h1>
                     <h2>{`${animal} — ${breed} — ${location}`}</h2>
@@ -41,4 +48,6 @@ export default class Details extends Component {
         )
     }
 }
+
+
 
