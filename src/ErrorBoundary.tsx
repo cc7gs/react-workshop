@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component, ErrorInfo } from 'react'
 import {Redirect,Link} from '@reach/router'
-//错误异常捕获
 
+// 错误异常捕获
 export default class ErrorBoundary extends Component {
-    state={
+    public state={
         hasError:false,
         redirect:false,
     }
-    static getDerivedStateFromError(){
+    public static getDerivedStateFromError(){
         return {hasError:true}
     }
-    componentDidCatch(error,info){
+    public componentDidCatch(error:Error,info:ErrorInfo){
         console.error('Error Boundary caught an error',error,info)
     }
-    componentDidUpdate(){
+    public componentDidUpdate(){
         if(this.state.hasError){
             setTimeout(() => {
                 this.setState({redirect:true})
@@ -21,7 +21,7 @@ export default class ErrorBoundary extends Component {
         }
     }
 
-    render() {
+    public render() {
         const {hasError,redirect}=this.state;
 
         if(redirect){

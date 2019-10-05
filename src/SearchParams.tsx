@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import Results from './components/results'
 import useDropdown from './components/useDropdown'
-import pet, { ANIMALS } from '@frontendmasters/pet'
+import pet, { ANIMALS,Animal } from '@frontendmasters/pet'
+import { RouteComponentProps } from '@reach/router'
 
-const SearchParams = () => {
+const SearchParams:React.FC<RouteComponentProps> = () => {
     const [location, setLocation] = useState('shangHai');
-    const [breeds, setBreeds] = useState([]);
+    const [breeds, setBreeds] = useState([] as string[]);
     const [animal, AnimalDropdown] = useDropdown('Animal', "dog", ANIMALS)
     const [breed, BreedDropdown,setBreed] = useDropdown('Breed', "", breeds);
-    const [pets,setPets]=useState([]);
+    const [pets,setPets]=useState([] as Animal[]);
 
     useEffect(() => {
         setBreeds([]);
         setBreed("");
         pet.breeds(animal).then(({ breeds }) => {
-            const breedStrings = breeds.map(({ name }) => name);
+            const breedStrings:string[] = breeds.map(({ name }) => name);
             setBreeds(breedStrings);
         }, console.error);
     }, [animal]);

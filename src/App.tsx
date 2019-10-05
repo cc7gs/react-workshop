@@ -6,8 +6,8 @@ import Details from './Details'
 // const SearchParams=lazy(()=>import('./SearchParams'));
 // const Details=lazy(()=>import('./Details'))
 
-//@todo clinet server 
-//Invariant Violation: ReactDOMServer does not yet support Suspense.
+// @todo clinet server 
+// Invariant Violation: ReactDOMServer does not yet support Suspense.
 // link https://reactjs.org/docs/code-splitting.html#reactlazy
 
 const App = () => {

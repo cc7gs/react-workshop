@@ -15,7 +15,7 @@ const app = express();
 
 app.use("/dist", express.static("dist"));
 
-//采用 string 方式
+// 采用 string 方式
 
 // app.use((req, res) => {
 //     const reactMarkup = (
