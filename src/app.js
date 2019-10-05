@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import { Router } from "@reach/router";
-import SearchParams from './SearchParams'
-import Details from './Details'
 import Header from './components/NavBar'
+const SearchParams=lazy(()=>import('./SearchParams'));
+const Details=lazy(()=>import('./Details'))
 
 const App = () => {
   return (
     <div>
-      <Header/>
-      <Router>
-        <SearchParams path="/" />
-        <Details path="/details/:id" />
-      </Router>
+      <Header />
+      <Suspense fallback={<h1>loading...</h1>}>
+        <Router>
+          <SearchParams path="/" />
+          <Details path="/details/:id" />
+        </Router>
+      </Suspense>
     </div>
   )
 }

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component,lazy } from 'react'
 import pet from "@frontendmasters/pet";
 import {navigate} from '@reach/router'
 import ErrorBoundary from './ErrorBoundary'
 import Carousel from './components/Carousel'
-import Modal from './modal'
+const Modal=lazy(()=>import('./modal'))
 
 export default function DetailsErrorBoundary(props) {
     return (<ErrorBoundary>
