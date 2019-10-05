@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Link } from "@reach/router";
+import { Router } from "@reach/router";
 import SearchParams from './SearchParams'
 import Details from './Details'
+import Header from './components/NavBar'
+
 const App = () => {
   return (
     <div>
-      <header>
-        <Link to="/">dopt me</Link>
-      </header>
+      <Header/>
       <Router>
         <SearchParams path="/" />
         <Details path="/details/:id" />
