@@ -3,7 +3,10 @@ import pet from "@frontendmasters/pet";
 import {navigate} from '@reach/router'
 import ErrorBoundary from './ErrorBoundary'
 import Carousel from './components/Carousel'
-const Modal=lazy(()=>import('./modal'))
+import Modal from './modal'
+
+//@todo server clint
+// const Modal=lazy(()=>import('./modal'))
 
 export default function DetailsErrorBoundary(props) {
     return (<ErrorBoundary>

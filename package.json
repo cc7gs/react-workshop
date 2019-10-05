@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "build": "parcel build --public-url ./dist/ src/index.html",
+    "start": "npm run build && babel-node server/index.js",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "dev": "parcel src/index.html --port 3000 ",
     "dev:mock": "cross-env PET_MOCK=mock npm run dev",
@@ -31,9 +33,11 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
+    "@babel/node": "^7.6.2",
     "@emotion/core": "^10.0.20",
     "@frontendmasters/pet": "^1.0.3",
     "@reach/router": "^1.2.1",
+    "express": "^4.17.1",
     "react": "^16.10.1",
     "react-dom": "^16.10.1"
   },
