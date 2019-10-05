@@ -33,3 +33,4 @@ const Results: React.FC<IProps> = ({ pets }) => {
         </div>
     )
 }
+export default Results

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Results from './components/results'
+import Results from './components/Results'
 import useDropdown from './components/useDropdown'
 import pet, { ANIMALS,Animal } from '@frontendmasters/pet'
 import { RouteComponentProps } from '@reach/router'

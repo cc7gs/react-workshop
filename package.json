@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "parcel build --public-url ./dist/ src/index.html",
-    "start": "npm run build && babel-node server/index.js",
+    "start": "npm run build && ts-node server/index.tsx",
     "clear-build-cache": "rm -rf .cache/ dist/",
     "dev": "parcel src/index.html --port 3000 ",
     "dev:mock": "cross-env PET_MOCK=mock npm run dev",
@@ -30,13 +30,13 @@
     "cross-env": "^6.0.0",
     "parcel-bundler": "^1.12.3",
     "prettier": "^1.18.2",
+    "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^4.1.0",
     "typescript": "^3.6.3"
   },
   "dependencies": {
-    "@babel/node": "^7.6.2",
     "@emotion/core": "^10.0.20",
     "@frontendmasters/pet": "^1.0.3",
     "@reach/router": "^1.2.1",
