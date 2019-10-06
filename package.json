@@ -11,7 +11,10 @@
     "dev:mock": "cross-env PET_MOCK=mock npm run dev",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "eslint \"src/**/*{js,jsx}\" --quiet ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
+
   },
   "keywords": [],
   "author": "",
@@ -19,9 +22,11 @@
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
     "@emotion/babel-preset-css-prop": "^10.0.17",
+    "@testing-library/react": "^9.3.0",
     "babel-eslint": "^10.0.3",
     "cross-env": "^6.0.0",
     "eslint": "^6.4.0",
@@ -29,6 +34,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
+    "jest": "^24.9.0",
     "parcel-bundler": "^1.12.3",
     "prettier": "^1.18.2"
   },

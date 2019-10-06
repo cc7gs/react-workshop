@@ -15,7 +15,8 @@ import Details from './Details'
 
 const App = () => {
   return (
-    <Provider store={store}>
+    <>
+     {/* <Provider store={store}> */}
       <Header />
       {/* <Suspense fallback={<h1>loading...</h1>}> */}
         <Router>
@@ -23,7 +24,8 @@ const App = () => {
           <Details path="/details/:id" />
         </Router>
       {/* </Suspense> */}
-    </Provider>
+    {/* </Provider> */}
+    </>
   )
 }
 export default App;

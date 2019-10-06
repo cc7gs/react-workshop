@@ -126,3 +126,60 @@ export default function NavBar() {
 
 > npm i typescript -D
 > npx tsc --init //init ts config
+
+# test
+> npm i -D jest  @testing-library/react
+
+`package.json`
+```js
+scripts:{
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
+}
+```
+
+接下来进入src目录并创建一个名为的文件夹__tests__。请注意，两边都是双下划线;在这种情况下，Jest假定此处的所有JS文件都是测试
+
+`SearchParams.test.js`
+```js
+import React from 'react'
+import {render,cleanup,fireEvent} from '@testing-library/react'
+import pet,{ANIMALS,_breeds,_dogs} from '@frontendmasters/pet'
+import SearchParams from '../SearchParams'
+
+// 退出时进行清理
+afterEach(cleanup);
+
+test('SearchParams ', async() => {
+    const {getByTestId,getByText}=render(<SearchParams/>);
+    const animalDropdown=getByTestId('use-dropdown-animal');
+    expect(animalDropdown.children.length).toEqual(ANIMALS.length+1)
+    //确保api 调用正确
+    expect(pet.breeds).toHaveBeenCalled();
+    
+    const breedDropdown=getByTestId('use-dropdown-breed');
+    expect(breedDropdown.children.length).toEqual(_breeds.length+1);
+
+    //form 提交测试
+    const searchResults = getByTestId("search-results");
+    expect(searchResults.textContent).toEqual("No Pets Found");
+    //click @todo 需要将异步请求改为同步
+    fireEvent(getByText("Submit"), new MouseEvent("click"))
+});
+```
+- 此处实例api获取，采用了mock,可以在项目中查看相关实现
+
+如果遇到 asyc语法问题，例如：  `ReferenceError: regeneratorRuntime is not defined`
+此时，需要babel 转译支持步骤如下:
+```
+npm i @babel/plugin-transform-runtime @babel/runtime -D
+
+`.babelrc`
+{
+    "presets": ["@babel/preset-env"],
+    "plugins": [
+        ["@babel/transform-runtime"]
+    ]
+}
+```

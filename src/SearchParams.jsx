@@ -7,6 +7,8 @@ import useDropdown from './components/useDropdown'
 import pet, { ANIMALS } from '@frontendmasters/pet'
 
 const SearchParams = (props) => {
+    const [location,setLocation]=useState('');
+    const [theme,setTheme]=useState('');
     const [breeds, setBreeds] = useState([]);
     const [animal, AnimalDropdown] = useDropdown('Animal', "dog", ANIMALS)
     const [breed, BreedDropdown,setBreed] = useDropdown('Breed', "", breeds);
@@ -29,7 +31,7 @@ const SearchParams = (props) => {
         });
         setPets(animals||[]);
     }
-    const {theme,location,changeLocation,setTheme}=props;
+    // const {theme,location,changeLocation,setTheme}=props;
     return (
         <div className="search-params">
             <form
@@ -44,7 +46,8 @@ const SearchParams = (props) => {
                 <input
                     id="location"
                     value={location}
-                    onChange={e => changeLocation(e.target.value)}
+                    // onChange={e => changeLocation(e.target.value)}
+                    onChange={e=>setLocation(e.target.value)}
                     placeholder="location" />
                 <AnimalDropdown />
                 <BreedDropdown />
@@ -64,12 +67,13 @@ const SearchParams = (props) => {
     )
 }
 
-const mapStateToProps=({location,theme})=>({
-    location,
-    theme
-});
-const mapDispatchToProps=dispatch=>({
-    setTheme:theme=>dispatch(changeTheme(theme)),
-    changeLocation:location=>dispatch(changeLocation(location))
-}) 
-export default connect(mapStateToProps,mapDispatchToProps)(SearchParams)
+// const mapStateToProps=({location,theme})=>({
+//     location,
+//     theme
+// });
+// const mapDispatchToProps=dispatch=>({
+//     setTheme:theme=>dispatch(changeTheme(theme)),
+//     changeLocation:location=>dispatch(changeLocation(location))
+// }) 
+// export default connect(mapStateToProps,mapDispatchToProps)(SearchParams)
+export default SearchParams;
