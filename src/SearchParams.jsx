@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import {connect} from 'react-redux'
+import changeTheme from './actionCreators/changeTheme'
+import changeLocation from './actionCreators/changeLocation'
 import Results from './components/results'
 import useDropdown from './components/useDropdown'
 import pet, { ANIMALS } from '@frontendmasters/pet'
 
-const SearchParams = () => {
-    const [location, setLocation] = useState('shangHai');
+const SearchParams = (props) => {
     const [breeds, setBreeds] = useState([]);
     const [animal, AnimalDropdown] = useDropdown('Animal', "dog", ANIMALS)
     const [breed, BreedDropdown,setBreed] = useDropdown('Breed', "", breeds);
@@ -27,7 +29,7 @@ const SearchParams = () => {
         });
         setPets(animals||[]);
     }
-    
+    const {theme,location,changeLocation,setTheme}=props;
     return (
         <div className="search-params">
             <form
@@ -42,14 +44,32 @@ const SearchParams = () => {
                 <input
                     id="location"
                     value={location}
-                    onChange={e => setLocation(e.target.value)}
+                    onChange={e => changeLocation(e.target.value)}
                     placeholder="location" />
                 <AnimalDropdown />
                 <BreedDropdown />
-                <button>Submit</button>
+                <label htmlFor="theme">theme</label>
+                <select
+                    id="theme"
+                    value={theme}
+                    onChange={e=>setTheme(e.target.value)}
+                >
+                    <option vlaue="darkblue">darkblue</option>
+                    <option vlaue="orange">orange</option>
+                </select>
+                <button style={{backgroundColor:theme}}>Submit</button>
             </form>
             <Results pets={pets}/>
         </div>
     )
 }
-export default SearchParams
+
+const mapStateToProps=({location,theme})=>({
+    location,
+    theme
+});
+const mapDispatchToProps=dispatch=>({
+    setTheme:theme=>dispatch(changeTheme(theme)),
+    changeLocation:location=>dispatch(changeLocation(location))
+}) 
+export default connect(mapStateToProps,mapDispatchToProps)(SearchParams)

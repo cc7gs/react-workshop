@@ -1,8 +1,11 @@
 import React, { lazy, Suspense } from 'react'
 import { Router } from "@reach/router";
+import {Provider} from 'react-redux'
+import store from './store'
 import Header from './components/NavBar'
 import SearchParams from './SearchParams';
 import Details from './Details'
+
 // const SearchParams=lazy(()=>import('./SearchParams'));
 // const Details=lazy(()=>import('./Details'))
 
@@ -12,7 +15,7 @@ import Details from './Details'
 
 const App = () => {
   return (
-    <div>
+    <Provider store={store}>
       <Header />
       {/* <Suspense fallback={<h1>loading...</h1>}> */}
         <Router>
@@ -20,7 +23,7 @@ const App = () => {
           <Details path="/details/:id" />
         </Router>
       {/* </Suspense> */}
-    </div>
+    </Provider>
   )
 }
 export default App;

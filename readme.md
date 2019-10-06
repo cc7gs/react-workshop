@@ -121,3 +121,8 @@ export default function NavBar() {
 
 ```
 ** vscode 下载 `styled-components`插件
+
+# typescipt
+
+> npm i typescript -D
+> npx tsc --init //init ts config
