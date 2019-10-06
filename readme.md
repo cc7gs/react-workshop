@@ -1,4 +1,6 @@
+
 > 本仓库是学习 frontendMaster react-v5学习笔记
+key words:  learing `react hooks`、`context`、`redux`、`typescript` 
 
 ** 可以根据我提交记录去查看相关内容
 
