@@ -1,0 +1,48 @@
+.toggle-btn{
+    position: relative;
+    box-sizing: initial;
+    outline: none;
+    width: 8em;
+    height: 4em;
+    user-select: none;
+    border-radius: 4em;
+    cursor: pointer;
+    background-color: #fbfbfb;
+    border:2px solid #e8eae9;
+    transition: all 0.4s ease;
+}
+.toggle-btn:focus::after,
+.toggle-btn:active::after {
+  box-sizing: initial;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1), 0 4px 0 rgba(0, 0, 0, 0.08),
+    inset 0px 0px 0px 3px #9c9c9c;
+}
+
+.toggle-btn::after{
+    display: block;
+    content: '';
+    position: relative;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    border-radius: 4em;
+    background:#fbfbfb;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    padding 0.3s ease, margin 0.3s ease;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1), 0 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.toggle-btn.toggle-btn-on {
+    background: #86d993;
+}
+.toggle-btn.toggle-btn-on::after{
+    left: 50%;
+}
+
+.toggle-btn.toggle-btn-on:active::after {
+    margin-left: -1.6em;
+}
+
+.toggle-btn:active::after {
+    padding-right: 1.6em;
+}

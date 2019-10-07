@@ -1,26 +1,18 @@
-import React, { lazy, Suspense } from 'react'
-import { Router } from "@reach/router";
-import Header from './components/NavBar'
-import SearchParams from './SearchParams';
-import Details from './Details'
-// const SearchParams=lazy(()=>import('./SearchParams'));
-// const Details=lazy(()=>import('./Details'))
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route, } from 'react-router-dom'
+import { Home, FullPage } from './containers'
 
-// @todo clinet server 
-// Invariant Violation: ReactDOMServer does not yet support Suspense.
-// link https://reactjs.org/docs/code-splitting.html#reactlazy
-
-const App = () => {
-  return (
-    <div>
-      <Header />
-      {/* <Suspense fallback={<h1>loading...</h1>}> */}
+const App: React.FC = () => {
+    return (
         <Router>
-          <SearchParams path="/" />
-          <Details path="/details/:id" />
+            <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/:pageId"
+                    render={(props) => <FullPage {...props} type={'comp'} />} />
+            </Switch>
         </Router>
-      {/* </Suspense> */}
-    </div>
-  )
+    );
 }
+
+
 export default App;
