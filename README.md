@@ -1,14 +1,17 @@
 
-> 本仓库是学习 frontendMaster react-v5学习笔记
+> 本仓库是学习 frontendMaster react系列视频学习笔记
 
-**key words**:  learing `react hooks`、`context`、`redux`、`typescript` 
+**key words**:  learing `react hooks`、`context`、`redux`、`typescript`、`react-patterns`
 
-** 可以根据我提交记录去查看相关内容
+# react 基础系列
 
 [原仓库地址](https://github.com/btholt/complete-intro-to-react-v5)
 [原文档地址](https://btholt.github.io/complete-intro-to-react-v5)
-# parcel    
-## install
+
+对于该系列视频在`master` 分支下,可以根据我的提交记录和文档来一步步学习。
+
+## parcel    
+### install
 ```js
 npm install -g parcel-bundler
 ```
@@ -18,7 +21,7 @@ npm install -g parcel-bundler
     "presets": ["@babel/preset-react", "@babel/preset-env"]
   }
 ```
-## use
+### use
 
 `src/index.html`
 ```html
@@ -67,10 +70,10 @@ ReactDOM.render(<App />, document.getElementById("root"));
 > npm run dev
 
 
-# css in js
+## css in js
 use emotion.js,document click [here](https://emotion.sh/docs/install)
 
-## install
+### install
 
 ```js
 npm install --save @emotion/core @emotion/babel-preset-css-prop
@@ -91,7 +94,7 @@ npm install --save @emotion/core @emotion/babel-preset-css-prop
   ],
 }
 ```
-## use
+### use
 ```js
 import React from 'react'
 import { css,keyframes } from '@emotion/core'
@@ -125,13 +128,15 @@ export default function NavBar() {
 ```
 ** vscode 下载 `styled-components`插件
 
-# typescipt
+## typescipt
+
+关于ts学习 可以切换到 `typescript` 分支下
 
 > npm i typescript -D
 
 > npx tsc --init //init ts config
 
-# test
+## test
 > npm i -D jest  @testing-library/react
 
 `package.json`
@@ -187,3 +192,9 @@ npm i @babel/plugin-transform-runtime @babel/runtime -D
     ]
 }
 ```
+# react 设计模式
+
+该系列视频是[Kent C. Dodds](https://kentcdodds.com)所讲授。
+[原文仓库地址](https://github.com/kentcdodds/advanced-react-patterns-v2)
+
+对于该系列我们笔记和仓库在 `react-patterns 分支`
