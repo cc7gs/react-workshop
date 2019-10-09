@@ -97,8 +97,8 @@ class Parent extends Component{
 ```
 这种方式的特点在于 Parent 组件往往拥有一些内部状态或者需要做一些复杂且共享的计算，这些数据需要对外暴露以实现复用。通过传递函数参数的方式来实现数据复用。
 
-# 组合组件(Compound component)
-组合组件设计模式一般应用在一些共享组件上。如 select 和 option , Tab 和TabItem 等，通过组合组件，使用者只需要传递子组件，子组件所需要的 props 在父组件通过`React.Children.map`和`React.cloneElement`进行props传递封装，因此引用子组件的时候就没必要传递所有 props 了。下面引用项目`02.tsx`实例说明:
+# 复合组件(Compound component)
+复合组件设计模式一般应用在一些共享组件上。如 select 和 option , Tab 和TabItem 等，通过复合组件，使用者只需要传递子组件，子组件所需要的 props 在父组件通过`React.Children.map`和`React.cloneElement`进行props传递封装，因此引用子组件的时候就没必要传递所有 props 了。下面引用项目`02.tsx`实例说明:
 
 **使用处**
 ```jsx
@@ -149,6 +149,56 @@ class Toggle extends React.Component<IProps>{
 }
 ```
 
+## 进一步讨论
+
+到目前为止,我们已经熟知复合模式都用处,现在我们对该问题进行进一步深入讨论，如果此时我们调用处的多层组件嵌套，像下面实例:
+```js
+ <Toggle onToggle={onToggle}>
+      <div className="xx"><Toggle.On>The button is on</Toggle.On></div>
+      <Toggle.Off>The button is off</Toggle.Off>
+      <div>
+        <Toggle.Button />
+      </div>
+</Toggle>
+```
+做组件props透传的或许会想到`context`,没错,利用数据状态管理可以很好解决组件层级管理数据共享的使用
+
+`创建Togglecontext`
+
+```js
+const defaultValue = {
+  on: false,
+  toggle: () => { }
+}
+const ToggleContext = React.createContext(defaultValue);
+```
+`Toggle 组件使用`
+```js
+//...
+  static On: React.FC<any> = ({ children }) => {
+    const { on } = useContext(ToggleContext);
+    return (on ? children : null)
+  }
+  static Off: React.FC<any> = ({ children }) => {
+    const { on } = useContext(ToggleContext);
+    return (on ? null : children)
+  }
+  static Button: React.FC<any> = (props) => {
+    const { on, toggle } = useContext(ToggleContext)
+    return (
+      <Switch on={on} onClick={toggle} {...props} />
+    )
+  }
+  static contextType = ToggleContext
+    // ...省略状态和方法
+  render(){
+    return (
+      <ToggleContext.Provider value={{ on, toggle: this.toggle }}>
+        {this.props.children}
+      </ToggleContext.Provider>
+    )
+   }
+```
 # render Props
 在调用组件时，引入一个函数类型的props这个props 定义了组件的渲染方式。最终实现代码复用。
 

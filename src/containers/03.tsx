@@ -1,7 +1,6 @@
-// Flexible Compound Components with context
 
-import React from 'react'
-import {Switch} from '../component'
+import React, { useContext } from 'react'
+import { Switch } from '../component'
 
 // Right now our component can only clone and pass props to immediate children.
 // So we need some way for our compound components to implicitly accept the on
@@ -29,25 +28,42 @@ import {Switch} from '../component'
 // 🐨 create a ToggleContext with React.createContext here
 
 interface IProps {
-    onToggle:(arg1:any)=>void;
+  onToggle: (arg1: any) => void;
 }
+const defaultValue = {
+  on: false,
+  toggle: () => { }
+}
+const ToggleContext = React.createContext(defaultValue);
+
 class Toggle extends React.Component<IProps> {
   // 🐨 each of these compound components will need to be changed to use
   // ToggleContext.Consumer and rather than getting `on` and `toggle`
   // from props, it'll get it from the ToggleContext.Consumer value.
-  static On:React.FC<any> = ({on, children}) => (on ? children : null)
-  static Off:React.FC<any> = ({on, children}) => (on ? null : children)
-  static Button:React.FC<any> = ({on, toggle, ...props}) => (
-    <Switch on={on} onClick={toggle} {...props} />
-  )
+  static On: React.FC<any> = ({ children }) => {
+    const { on } = useContext(ToggleContext);
+    return (on ? children : null)
+  }
+  static Off: React.FC<any> = ({ children }) => {
+    const { on } = useContext(ToggleContext);
+    return (on ? null : children)
+  }
+  static Button: React.FC<any> = (props) => {
+    const { on, toggle } = useContext(ToggleContext)
+    return (
+      <Switch on={on} onClick={toggle} {...props} />
+    )
+  }
+  static contextType = ToggleContext
   // Because we'll be passing state into context, we need to 🐨 add the
   // toggle function to state.
   // 💰 You'll need to move this below the `toggle` function. See
   // if you can figure out why :)
-  state = {on: false}
+
+  state = { on: false }
   toggle = () =>
     this.setState(
-     {on: !this.state.on},
+      { on: !this.state.on },
       () => this.props.onToggle(this.state.on),
     )
   render() {
@@ -56,11 +72,11 @@ class Toggle extends React.Component<IProps> {
     // this.props.children as the children of the provider. Then we'll
     // expose the on state and toggle method as properties in the context
     // value (the value prop).
-    return React.Children.map(this.props.children, child =>
-      React.cloneElement(child as any, {
-        on: this.state.on,
-        toggle: this.toggle,
-      }),
+    const { on } = this.state;
+    return (
+      <ToggleContext.Provider value={{ on, toggle: this.toggle }}>
+        {this.props.children}
+      </ToggleContext.Provider>
     )
   }
 }
@@ -69,7 +85,7 @@ class Toggle extends React.Component<IProps> {
 // component is intended to be used and is used in the tests.
 // You can make all the tests pass by updating the Toggle component.
 function Usage({
-  onToggle = (args: any) => console.log('onToggle',args),
+  onToggle = (args: any) => console.log('onToggle', args),
 }) {
   return (
     <Toggle onToggle={onToggle}>
@@ -83,4 +99,4 @@ function Usage({
 }
 Usage.title = 'Flexible Compound Components'
 
-export {Toggle, Usage as default}
+export { Toggle, Usage as default }
