@@ -1,19 +1,29 @@
-// render props
 
 import React from 'react'
 import {Switch} from '../component'
 
-// we're back to basics here. Rather than compound components,
-// let's use a render prop!
-class Toggle extends React.Component {
+interface IProps {
+  onToggle: (arg: any) => void;
+  children:(args:any)=>any
+}
+
+
+class Toggle extends React.Component<IProps> {
   state = {on: false}
   toggle = () =>
     this.setState(
-      ({on}) => ({on: !on}),
+      {on:!this.state.on},
       () => {
         this.props.onToggle(this.state.on)
       },
     )
+    getStateAndHelpers(){
+      return{
+        on:this.state.on,
+        toggle:this.toggle
+
+      }
+    }
   render() {
     const {on} = this.state
     // We want to give rendering flexibility, so we'll be making
@@ -21,7 +31,7 @@ class Toggle extends React.Component {
     // You'll notice the children prop in the Usage component
     // is a function. 🐨 So you can replace this with a call this.props.children()
     // But you'll need to pass it an object with `on` and `toggle`.
-    return <Switch on={on} onClick={this.toggle} />
+    return this.props.children(this.getStateAndHelpers())
   }
 }
 
@@ -29,11 +39,11 @@ class Toggle extends React.Component {
 // component is intended to be used and is used in the tests.
 // You can make all the tests pass by updating the Toggle component.
 function Usage({
-  onToggle = (...args) => console.log('onToggle', ...args),
+  onToggle = (args:any) => console.log('onToggle', args),
 }) {
   return (
     <Toggle onToggle={onToggle}>
-      {({on, toggle}) => (
+      {({on, toggle})=> (
         <div>
           {on ? 'The button is on' : 'The button is off'}
           <Switch on={on} onClick={toggle} />

@@ -73,35 +73,12 @@ const Toggle:React.FC<IProps>=(props)=>{
 
 ```
 
-# Function as Child Component
-是指父组件接收一个函数以实现复用 代码如下：
-```js
-import { Parent } from './components';
-function example () {
-return (
-<Parent>
-{ param => <div> {param}</div>}
-</Parent>
-)
-}
-```
-
-```js
-import React,{Component} from 'react'
-class Parent extends Component{
-    render(){
-        <div> {this.props.children (this.state.username))</div>
-    }
-}
-
-```
-这种方式的特点在于 Parent 组件往往拥有一些内部状态或者需要做一些复杂且共享的计算，这些数据需要对外暴露以实现复用。通过传递函数参数的方式来实现数据复用。
 
 # 复合组件(Compound component)
 复合组件设计模式一般应用在一些共享组件上。如 select 和 option , Tab 和TabItem 等，通过复合组件，使用者只需要传递子组件，子组件所需要的 props 在父组件通过`React.Children.map`和`React.cloneElement`进行props传递封装，因此引用子组件的时候就没必要传递所有 props 了。下面引用项目`02.tsx`实例说明:
 
 **使用处**
-```jsx
+```js
 function Usage() {
     const handleToggle = (args: any) => {
         console.log(args, 'click');
@@ -202,7 +179,86 @@ const ToggleContext = React.createContext(defaultValue);
 # render Props
 在调用组件时，引入一个函数类型的props这个props 定义了组件的渲染方式。最终实现代码复用。
 
+下面还是以上面复合组件(Compound component)案例为例
+
+`使用处`
+
+```js
+function Usage({
+  onToggle = (args:any) => console.log('onToggle', args),
+}) {
+  return (
+    <Toggle onToggle={onToggle}>
+      {({on, toggle})=> (
+        <div>
+          {on ? 'The button is on' : 'The button is off'}
+          <Switch on={on} onClick={toggle} />
+          <hr />
+          <button aria-label="custom-button" onClick={toggle}>
+            {on ? 'on' : 'off'}
+          </button>
+        </div>
+      )}
+    </Toggle>
+  )
+}
+```
+
+`Toggle component`
+
+```js
+//方法状态省略
+getStateAndHelpers(){
+      return{
+        on:this.state.on,
+        toggle:this.toggle
+
+      }
+    }
+  render() {
+    const {on} = this.state
+    return this.props.children(this.getStateAndHelpers())
+  }
+  //...
+```
+
+
+# Function as Child Component
+
+是指父组件接收一个函数以实现复用 代码如下：
+
+```js
+import { Parent } from './components';
+function example () {
+return (
+<Parent>
+{ param => <div> {param}</div>}
+</Parent>
+)
+}
+```
+
+```js
+import React,{Component} from 'react'
+class Parent extends Component{
+    render(){
+        <div> {this.props.children (this.state.username))</div>
+    }
+}
+
+```
+
+这种方式的特点在于 Parent 组件往往拥有一些内部状态或者需要做一些复杂且共享的计算，这些数据需要对外暴露以实现复用。通过传递函数参数的方式来实现数据复用。
+
+
+
+
 # 高阶组件(HOC)
 
 # context
+
+
 # provider
+
+
+
