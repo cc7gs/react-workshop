@@ -1,28 +1,47 @@
 // State Initializers
 
 import React from 'react'
-import {Switch} from '../component'
+import { Switch } from '../component'
 
-const callAll = (...fns) => (...args) =>
+const callAll = (...fns: ((...args:any) => void)[]) => (...args: any) =>
   fns.forEach(fn => fn && fn(...args))
 
-class Toggle extends React.Component {
+interface IProps {
+  onToggle: (on: boolean) => void;
+  initialOn:boolean;
+  onReset:(on:boolean)=>void;
+  children: (props: any) => any;
+}
+interface IState {
+  on: boolean;
+}
+class Toggle extends React.Component<IProps,IState> {
   // 🐨 We're going to need some static defaultProps here to allow
   // people to pass a `initialOn` prop.
   //
   // 🐨 Rather than initializing state to have on as false,
   // set on to this.props.initialOn
-  state = {on: false}
+  static defaultProps={
+    initialOn:false,
+    onReset:()=>{}
+  }
+  initalState={on:this.props.initialOn}
+  state =this.initalState
 
   // 🐨 now let's add a reset method here that resets the state
   // to the initial state. Then add a callback that calls
   // this.props.onReset with the `on` state.
   toggle = () =>
     this.setState(
-      ({on}) => ({on: !on}),
+      ({ on }) => ({ on: !on }),
       () => this.props.onToggle(this.state.on),
     )
-  getTogglerProps = ({onClick, ...props} = {}) => {
+  onRest=()=>{
+    this.setState(this.initalState,()=>{
+      this.props.onReset(this.state.on)
+    })
+  }
+  getTogglerProps = ({ onClick=()=>{}, ...props } = {}) => {
     return {
       'aria-expanded': this.state.on,
       onClick: callAll(onClick, this.toggle),
@@ -33,8 +52,7 @@ class Toggle extends React.Component {
     return {
       on: this.state.on,
       toggle: this.toggle,
-      // 🐨 now let's include the reset method here
-      // so folks can use that in their implementation.
+      reset:this.onRest,
       getTogglerProps: this.getTogglerProps,
     }
   }
@@ -43,13 +61,10 @@ class Toggle extends React.Component {
   }
 }
 
-// Don't make changes to the Usage component. It's here to show you how your
-// component is intended to be used and is used in the tests.
-// You can make all the tests pass by updating the Toggle component.
 function Usage({
   initialOn = false,
-  onToggle = (...args) => console.log('onToggle', ...args),
-  onReset = (...args) => console.log('onReset', ...args),
+  onToggle = (...args:any) => console.log('onToggle', ...args),
+  onReset = (...args:any) => console.log('onReset', ...args),
 }) {
   return (
     <Toggle
@@ -57,9 +72,9 @@ function Usage({
       onToggle={onToggle}
       onReset={onReset}
     >
-      {({getTogglerProps, on, reset}) => (
+      {({ getTogglerProps, on, reset }) => (
         <div>
-          <Switch {...getTogglerProps({on})} />
+          <Switch {...getTogglerProps({ on })} />
           <hr />
           <button onClick={() => reset()}>Reset</button>
         </div>
@@ -69,4 +84,4 @@ function Usage({
 }
 Usage.title = 'State Initializers'
 
-export {Toggle, Usage as default}
+export { Toggle, Usage as default }

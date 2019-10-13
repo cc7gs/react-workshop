@@ -15,21 +15,35 @@ import {Switch} from '../component'
 // 💰 Here's a little utility that might come in handy
 // const callAll = (...fns) => (...args) => fns.forEach(fn => fn && fn(...args))
 
-class Toggle extends React.Component {
+const callAll=(...fns: any[])=>(...args: any)=>fns.forEach(fn=>{fn&&fn(...args)})
+
+interface IProps{
+  onToggle:(on:boolean)=>void;
+  children:(props:any)=>any;
+}
+interface IState{
+  on:boolean;
+}
+
+class Toggle extends React.Component<IProps,IState> {
   state = {on: false}
   toggle = () =>
     this.setState(
       ({on}) => ({on: !on}),
       () => this.props.onToggle(this.state.on),
     )
+  getToggleProps=({onClick=null,...props}={})=>{
+    return{
+      'aria-expanded': this.state.on,
+      onClick:callAll(onClick,this.toggle),
+      ...props,
+    }
+  }
   getStateAndHelpers() {
     return {
       on: this.state.on,
       toggle: this.toggle,
-      togglerProps: {
-        'aria-expanded': this.state.on,
-        onClick: this.toggle,
-      },
+      getTogglerProps:this.getToggleProps
     }
   }
   render() {
@@ -41,7 +55,7 @@ class Toggle extends React.Component {
 // component is intended to be used and is used in the tests.
 // You can make all the tests pass by updating the Toggle component.
 function Usage({
-  onToggle = (...args) => console.log('onToggle', ...args),
+  onToggle = (on:boolean) => console.log('onToggle',on),
   onButtonClick = () => console.log('onButtonClick'),
 }) {
   return (
