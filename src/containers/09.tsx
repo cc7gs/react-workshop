@@ -3,18 +3,33 @@
 import React from 'react'
 import {Switch} from '../component'
 
-const callAll = (...fns) => (...args) =>
+const callAll = (...fns:any[]) => (...args:any) =>
   fns.forEach(fn => fn && fn(...args))
 
-class Toggle extends React.Component {
+interface IProps {
+  onToggle: (on: boolean) => void;
+  initialOn: boolean;
+  onReset: (on: boolean) => void;
+  children: (props: any) => any;
+  stateReducer: (state: any, changes: any) => any
+}
+interface IState {
+  on: boolean;
+}
+  
+class Toggle extends React.Component<IProps,IState> {
   static defaultProps = {
     initialOn: false,
     onReset: () => {},
-    stateReducer: (state, changes) => changes,
+    stateReducer: (state:IState, changes:any) => changes,
+  }
+  static stateChangeProps={
+    toggle:'__toggle__',
+    reset:'__reset__'
   }
   initialState = {on: this.props.initialOn}
   state = this.initialState
-  internalSetState(changes, callback) {
+  internalSetState(changes:any, callback:()=>void) {
     this.setState(state => {
       // handle function setState call
       const changesObject =
@@ -26,27 +41,27 @@ class Toggle extends React.Component {
       // property and return an object only of the state changes
       // 💰 to remove the `type`, you can destructure the changes:
       // `{type, ...c}`
-      return Object.keys(reducedChanges).length
+      const {type:ignoredType,...remainingChanges}=reducedChanges;
+
+      return Object.keys(remainingChanges).length
         ? reducedChanges
         : null
     }, callback)
   }
   reset = () =>
-    // 🐨 add a `type` string property to this call
-    this.internalSetState(this.initialState, () =>
+    this.internalSetState({type:Toggle.stateChangeProps.reset,...this.initialState}, () =>
       this.props.onReset(this.state.on),
     )
-  // 🐨 accept a `type` property here and give it a default value
-  toggle = () =>
+  toggle = ({type=Toggle.stateChangeProps.toggle}={}) =>
     this.internalSetState(
-      // pass the `type` string to this object
-      ({on}) => ({on: !on}),
+      ({on}:IState) => ({type,on: !on}),
       () => this.props.onToggle(this.state.on),
     )
-  getTogglerProps = ({onClick, ...props} = {}) => ({
-    // 🐨 change `this.toggle` to `() => this.toggle()`
-    // to avoid passing the click event to this.toggle.
-    onClick: callAll(onClick, this.toggle),
+  getTogglerProps = ({onClick=null, ...props} = {}) => ({
+    
+    //avoid passing the click event to this toggle
+
+    onClick: callAll(onClick, ()=>this.toggle()),
     'aria-expanded': this.state.on,
     ...props,
   })
@@ -63,27 +78,28 @@ class Toggle extends React.Component {
   }
 }
 
-// Don't make changes to the Usage component. It's here to show you how your
-// component is intended to be used and is used in the tests.
-// You can make all the tests pass by updating the Toggle component.
-class Usage extends React.Component {
+interface UsageState {
+  readonly timesClicked: number
+}
+
+class Usage extends React.Component<any,UsageState> {
   static defaultProps = {
-    onToggle: (...args) => console.log('onToggle', ...args),
-    onReset: (...args) => console.log('onReset', ...args),
+    onToggle: (...args:any) => console.log('onToggle', ...args),
+    onReset: (...args:any) => console.log('onReset', ...args),
   }
   initialState = {timesClicked: 0}
   state = this.initialState
-  handleToggle = (...args) => {
+  handleToggle = (...args:any) => {
     this.setState(({timesClicked}) => ({
       timesClicked: timesClicked + 1,
     }))
     this.props.onToggle(...args)
   }
-  handleReset = (...args) => {
+  handleReset = (...args:any) => {
     this.setState(this.initialState)
     this.props.onReset(...args)
   }
-  toggleStateReducer = (state, changes) => {
+  toggleStateReducer = (state:any, changes:any) => {
     if (changes.type === 'forced') {
       return changes
     }
@@ -129,17 +145,7 @@ class Usage extends React.Component {
     )
   }
 }
-Usage.title = 'State Reducers (with change types)'
+(Usage as any).title = 'State Reducers (with change types)'
 
 export {Toggle, Usage as default}
 
-/* eslint
-"no-unused-vars": [
-  "warn",
-  {
-    "argsIgnorePattern": "^_.+|^ignore.+",
-    "varsIgnorePattern": "^_.+|^ignore.+",
-    "args": "after-used"
-  }
-]
- */

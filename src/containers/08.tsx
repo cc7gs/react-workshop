@@ -1,9 +1,9 @@
 // state reducer
 
 import React from 'react'
-import {Switch} from '../component'
+import { Switch } from '../component'
 
-const callAll = (...fns) => (...args) =>
+const callAll = (...fns: any[]) => (...args: any) =>
   fns.forEach(fn => fn && fn(...args))
 
 // Render props allow users to be in control over the UI based on state.
@@ -19,42 +19,66 @@ const callAll = (...fns) => (...args) =>
 // What this means for our implementation is that we can create a single
 // function that does all the work before calling setState. Then we can
 // replace all calls to setState with that function.
+interface IProps {
+  onToggle: (on: boolean) => void;
+  initialOn: boolean;
+  onReset: (on: boolean) => void;
+  children: (props: any) => any;
+  stateReducer: (state: any, changes: any) => any
+}
+interface IState {
+  on: boolean;
+}
 
-class Toggle extends React.Component {
+class Toggle extends React.Component<IProps, IState> {
   static defaultProps = {
     initialOn: false,
-    onReset: () => {},
+    onReset: () => { },
     // 🐨 let's add a default stateReducer here. It should return
     // the changes object as it is passed.
+    stateReducer: (state: any, changes: any) => changes
   }
-  initialState = {on: this.props.initialOn}
+  initialState = { on: this.props.initialOn }
   state = this.initialState
-  // 🐨 let's add a method here called `internalSetState`. It will simulate
-  // the same API as `setState(updates, callback)`:
-  // - updater: (changes object or function that returns the changes object)
-  // - callback: Function called after the state has been updated
-  // This will call setState with an updater function (a function that receives the state).
-  // If the changes are a function, then call that function with the state to get the actual changes
-  //
-  // 🐨 Call this.props.stateReducer with the `state` and `changes` to get the user changes.
-  //
-  // 🐨 Then, if the returned value exists and has properties, return that from your updater function.
-  // If it does not exist or is an empty object, then return null (avoids an unecessary re-render).
-  //
-  // 🐨 Pass the callback to the 2nd argument to this.setState
-  //
-  // 🐨 Finally, update all pre-existing instances of this.setState
-  // to this.internalSetState
+
+  inernalSetState(changes: any, callback: () => void) {
+    this.setState((state) => {
+      // handle function setState call
+      const changeObject =
+        typeof changes === 'function' ? changes(state) : changes
+
+      // state reducer
+      const reducerChange =
+        this.props.stateReducer(state, changeObject) || {}
+
+      return (
+        Object.keys(reducerChange).length
+          ? reducerChange
+          : null
+      )
+    }, callback)
+  }
+//internalSetState
+  // internalSetState(changes:any,callback:()=>void){
+  //   this.setState(currState=>{
+  //     return [changes]
+  //           .map(c=>typeof c==='function'?c(currState):c)
+  //           .map(c=>this.props.stateReducer(currState,c)||{})
+  //           .map(c=>Object.keys(c).length?c:null)[0]
+
+  //   },callback)
+  // }
+  
   reset = () =>
-    this.setState(this.initialState, () =>
+    this.inernalSetState(this.initialState, () =>
       this.props.onReset(this.state.on),
     )
   toggle = () =>
-    this.setState(
-      ({on}) => ({on: !on}),
+    this.inernalSetState(
+      ({ on }:IState) => ({ on: !on }),
       () => this.props.onToggle(this.state.on),
     )
-  getTogglerProps = ({onClick, ...props} = {}) => ({
+  getTogglerProps = ({ onClick = null, ...props } = {}) => ({
     onClick: callAll(onClick, this.toggle),
     'aria-expanded': this.state.on,
     ...props,
@@ -72,34 +96,35 @@ class Toggle extends React.Component {
   }
 }
 
-// Don't make changes to the Usage component. It's here to show you how your
-// component is intended to be used and is used in the tests.
-// You can make all the tests pass by updating the Toggle component.
-class Usage extends React.Component {
+interface UsageState {
+  readonly timesClicked: number
+}
+
+class Usage extends React.Component<any, UsageState> {
   static defaultProps = {
-    onToggle: (...args) => console.log('onToggle', ...args),
-    onReset: (...args) => console.log('onReset', ...args),
+    onToggle: (...args: any) => console.log('onToggle', args),
+    onReset: (on: boolean) => console.log('onReset', on),
   }
-  initialState = {timesClicked: 0}
+  initialState = { timesClicked: 0 }
   state = this.initialState
-  handleToggle = (...args) => {
-    this.setState(({timesClicked}) => ({
+  handleToggle = (...args: any) => {
+    this.setState(({ timesClicked }) => ({
       timesClicked: timesClicked + 1,
     }))
     this.props.onToggle(...args)
   }
-  handleReset = (...args) => {
+  handleReset = (...args: any) => {
     this.setState(this.initialState)
     this.props.onReset(...args)
   }
-  toggleStateReducer = (state, changes) => {
+  toggleStateReducer = (state: UsageState, changes: any) => {
     if (this.state.timesClicked >= 4) {
-      return {...changes, on: false}
+      return { ...changes, on: false }
     }
     return changes
   }
   render() {
-    const {timesClicked} = this.state
+    const { timesClicked } = this.state
     return (
       <Toggle
         stateReducer={this.toggleStateReducer}
@@ -130,17 +155,7 @@ class Usage extends React.Component {
     )
   }
 }
-Usage.title = 'State Reducers'
+(Usage as any).title = 'State Reducers'
 
-export {Toggle, Usage as default}
+export { Toggle, Usage as default }
 
-/* eslint
-"no-unused-vars": [
-  "warn",
-  {
-    "argsIgnorePattern": "^_.+|^ignore.+",
-    "varsIgnorePattern": "^_.+|^ignore.+",
-    "args": "after-used"
-  }
-]
- */

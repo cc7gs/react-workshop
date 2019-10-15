@@ -1,5 +1,7 @@
 本仓库主要是学习 react patterns 搭建的个人仓库，下面是我的一些模式总结
 
+> [仓库地址]（https://github.com/cc7gs/react-workshop/tree/react-patterns)
+
 # 基础使用（callback）
 ```js
 import React, { useState } from 'react'
@@ -252,13 +254,190 @@ class Parent extends Component{
 
 
 
+# state Reducer
+该模式允许用户根据逻辑来控制公共组件的状态。
+场景：我们目前有一个toggle组件，可能点击按钮来切换状态，或者点击reset按钮重置状态；目前加一个控制条件，当用户点击3次后就不能在切换状态。
+![](./src/images/state_reducer.png)
+## 搭建基础toogle 组件
+根据前面 render props基础上首先实现toggle 组件。
 
-# 高阶组件(HOC)
+`Use page`调用处
 
-# context
+```js
+function Usage({
+  onToggle = (...args:any) => console.log('onToggle', ...args),
+  onReset = (...args:any) => console.log('onReset', ...args),
+}) {
+  return (
+    <Toggle
+      onToggle={onToggle}
+      onReset={onReset}
+    >
+      {({ getTogglerProps, on, reset }) => (
+        <div>
+          <Switch {...getTogglerProps({ on })} />
+          <hr />
+          <button onClick={() => reset()}>Reset</button>
+        </div>
+      )}
+    </Toggle>
+  )
+}
+```
+注释:`getTogglerProps`用于获取props和更新公共state 状态
 
+`Toggle component`
 
-# provider
+```js
+//用于处理多个函数调用依次调用
+const callAll = (...fns: ((...args:any) => void)[]) => (...args: any) =>
+  fns.forEach(fn => fn && fn(...args))
+
+interface IProps {
+  onToggle: (on: boolean) => void;
+  initialOn?:boolean;
+  onReset:(on:boolean)=>void;
+  children: (props: any) => any;
+}
+interface IState {
+  on: boolean;
+}
+class Toggle extends React.Component<IProps,IState> {
+  static defaultProps={
+    initialOn:false,
+    onReset:()=>{}
+  }
+  initalState={on:this.props.initialOn}
+  state =this.initalState
+
+  toggle = () =>
+    this.setState(
+      ({ on }) => ({ on: !on }),
+      () => this.props.onToggle(this.state.on),
+    )
+  onRest=()=>{
+    this.setState(this.initalState,()=>{
+      this.props.onReset(this.state.on)
+    })
+  }
+  getTogglerProps = ({ onClick=()=>{}, ...props } = {}) => {
+    return {
+      onClick: callAll(onClick, this.toggle),
+      ...props,
+    }
+  }
+  getStateAndHelpers() {
+    return {
+      on: this.state.on,
+      toggle: this.toggle,
+      reset:this.onRest,
+      getTogglerProps: this.getTogglerProps,
+    }
+  }
+  render() {
+    return this.props.children(this.getStateAndHelpers())
+  }
+}
+```
+到目前我们已经实现了一个Toggle组件和 reset按钮,目前一切都正常工作，那么要如何在`use page`页面根据点击此数禁止用户切换Toggle状态呢？
+
+## 添加 state Reducer
+根据业务需求我们`use Page`页面修改如下：
+
+```js
+const initialState =0
+[timesClicked,setTimes]=useState(initialState);
+const  handleToggle = (...args: any) => {
+    setTimes(timesClicked+1)
+    props.onToggle(...args)
+  }
+const handleReset = (...args: any) => {
+    setTimes(this.initialState)
+    props.onReset(...args)
+  }
+
+ <Toggle
+      onToggle={handleToggle}
+      onReset={handleReset}
+    >
+      {({ getTogglerProps, on, reset }) => (
+        <div>
+          <Switch {...getTogglerProps({ on })} />
+           {timesClicked > 4 ? (
+              <div data-testid="notice">
+                Whoa, you clicked too much!
+                <br />
+              </div>
+            ) : timesClicked > 0 ? (
+              <div data-testid="click-count">
+                Click count: {timesClicked}
+              </div>
+            ) : null}
+          <hr />
+          <button onClick={() => reset()}>Reset</button>
+        </div>
+      )}
+   </Toggle>
+//... 
+```
+此时我们已经能够记录 tiemsclick,和显示相应的文字，现在我们添加 `stateReducer`
+```js
+const toggleStateReducer = (state: UsageState, changes: any) => {
+    if (timesClicked >= 4) {
+      return { ...changes, on: false }
+    }
+    return changes
+  }
+  //...
+  <Toggle
+    stateReucer={toggleStateReducer}
+  > 
+```
+现在我们大致完成了 `use page`使用，现在看下 `Toggle`组件的修改
+
+`Toggle component`
+
+```js 
+ state =this.initalState
+ inernalSetState(changes: any, callback: () => void) {
+    this.setState((state) => {
+      // handle function setState call
+      const changeObject =
+        typeof changes === 'function' ? changes(state) : changes
+
+      // state reducer
+      const reducerChange =
+        this.props.stateReducer(state, changeObject) || {}
+
+      return (
+        Object.keys(reducerChange).length
+          ? reducerChange
+          : null
+      )
+    }, callback)
+  }
+
+  reset = () =>
+    this.inernalSetState(this.initialState, () =>
+      this.props.onReset(this.state.on),
+    )
+  toggle = () =>
+    this.inernalSetState(
+      ({ on }:IState) => ({ on: !on }),
+      () => this.props.onToggle(this.state.on),
+    )
+```
+首先我们在Toggle 组件中实现了`inernalSetState(changes,callback)`方法,该方法用来模拟 `setSate(updateState,callback)`
+- updateState 可以是`funciton`或者 `object` 即`(sate)=>updateSate`或者`{}`
+- 我们根据`use page`中sateReudcuer方法返回最新状态
+- 之后我们替换所有 `setSate`更改为`internalSetState`
+
+完整代码在[仓库](https://github.com/cc7gs/react-workshop/tree/react-patterns) `containers/08.tsx`中
+# Provider Pattern
+
+## 高阶组件(HOC)
+
+# combining Patterns
 
 
 
