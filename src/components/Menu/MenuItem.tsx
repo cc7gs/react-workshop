@@ -26,11 +26,10 @@ const MenuItem:React.FC<MenuItemProps>=({
     const classes=classNames(prefixCls,className,{
         [`${prefixCls}-active`]:eventKey===activeKey,
         [`${prefixCls}-selected`]:eventKey===activeKey,
-
         [`${prefixCls}-disabled`]:disabled
     })
     const handleClick=()=>{
-        if(onSelect){
+        if(onSelect&&!disabled){
             onSelect(eventKey);
         }
     }
@@ -40,4 +39,6 @@ const MenuItem:React.FC<MenuItemProps>=({
         </li>
     )
 }
+MenuItem.displayName="menuItem";
+
 export default MenuItem;

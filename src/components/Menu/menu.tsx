@@ -2,10 +2,11 @@ import classNames from 'classnames';
 import React, { useState } from 'react'
 import getPrefixCls from '../../utils/getPrefix';
 import MenuItem from './MenuItem';
+import SubMenu from './SubMenu'
 import MenuContext from './MenuContext'
 
 
-type MenuMode = 'horizontal' | 'vertical' | 'inline';
+export type MenuMode = 'horizontal' | 'vertical' | 'inline';
 
 export interface MenuProps {
     defaultSelectKey?: React.Key;
@@ -35,7 +36,8 @@ const Menu: React.FC<MenuProps> = (props) => {
     }
     const menuProps={
         activeKey:activeKey,
-        onSelect:handleClick
+        onSelect:handleClick,
+        mode,
     };
     return (
         <ul className={classes} style={style}>
@@ -45,5 +47,6 @@ const Menu: React.FC<MenuProps> = (props) => {
         </ul>
     )
 }
+Menu.displayName="menu";
 
-export {MenuItem,Menu as default}
+export {MenuItem,SubMenu,Menu as default}
