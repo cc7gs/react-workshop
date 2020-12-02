@@ -31,7 +31,7 @@
     "build": "npm run clear && craco build && mv build dist",
     "test": "craco test",
     "eject": "craco eject",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "husky": {
     "hooks": {
