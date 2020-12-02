@@ -1,0 +1,6 @@
+typings
+es/**/*
+lib/**/*
+node_modules
+dist
+**/*.d.ts

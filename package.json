@@ -1,45 +1,46 @@
 {
   "name": "learn-playground",
   "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@craco/craco": "^5.7.0",
-    "@testing-library/jest-dom": "^5.11.5",
-    "@types/classnames": "^2.2.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "12.7.3",
-    "@types/react": "16.9.2",
-    "@types/react-dom": "16.9.0",
-    "@types/react-redux": "^7.1.2",
-    "@types/react-router": "^5.0.5",
-    "@types/react-router-dom": "^4.3.5",
-    "@types/styled-components": "^4.1.19",
-    "antd": "^4.2.4",
-    "classnames": "^2.2.6",
-    "craco-less": "^1.17.0",
-    "polished": "^3.6.3",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-redux": "^7.1.1",
-    "react-router": "^5.0.1",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "3.4",
-    "redux": "^4.0.4",
-    "redux-logger": "^3.0.6",
-    "styled-components": "^4.3.2",
-    "styled-components-modifiers": "^1.2.5",
-    "typescript": "^4.0.5"
+  "description": "build story book reference ant design ",
+  "author": "chen",
+  "title": "storybook",
+  "keywords": [
+    "ant",
+    "component",
+    "components",
+    "frontend",
+    "react",
+    "react-component",
+    "ui"
+  ],
+  "homepage": "https://github.com/cc7gs/react-workshop/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cc7gs/react-workshop/tree/storyBook"
   },
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "scripts": {
+    "clear": "rimraf ./dist",
+    "lint:script": "eslint . --ext '.js,.jsx,.ts,.tsx'",
     "start": "craco start",
-    "build": "craco build",
+    "build": "npm run clear && craco build && mv build dist",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "prepublish": "npm run build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:script"
+    }
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
@@ -54,8 +55,44 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "polished": "^3.6.3"
+  },
+  "peerDependencies": {
+    "antd": ">=4.2.0",
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
+  },
   "devDependencies": {
+    "@craco/craco": "^5.7.0",
+    "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
-    "redux-devtools-extension": "^2.13.8"
+    "@types/classnames": "^2.2.10",
+    "@types/jest": "^26.0.15",
+    "@types/node": "12.7.3",
+    "@types/react": "16.9.2",
+    "@types/react-dom": "16.9.0",
+    "@types/react-redux": "^7.1.2",
+    "@types/react-router": "^5.0.5",
+    "@types/react-router-dom": "^4.3.5",
+    "@types/styled-components": "^4.1.19",
+    "antd": "^4.2.4",
+    "craco-less": "^1.17.0",
+    "cross-env": "^7.0.2",
+    "husky": "^4.3.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-redux": "^7.1.1",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.4",
+    "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "rimraf": "^3.0.2",
+    "styled-components": "^4.3.2",
+    "styled-components-modifiers": "^1.2.5",
+    "typescript": "^4.0.5"
   }
 }

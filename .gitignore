@@ -1,5 +1,10 @@
+/.vscode/
 node_modules/
 .cache/
 dist/
 .env
 .vscode/
+*.log
+*.log.*
+yarn.lock
+package-lock.json
