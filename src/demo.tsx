@@ -2,8 +2,7 @@ import React from 'react'
 import { Button as AntButton,Menu as AntMenu, Space } from 'antd'
 import './index.less';
 
-import Button from './components/Button/index';
-import Menu, { MenuItem,SubMenu } from './components/Menu/menu'
+import {Button,Menu} from './components';
 
 export default function Demo() {
     return (
@@ -15,13 +14,13 @@ export default function Demo() {
                 style={{ width: 256 }}
                 mode="horizontal"
             >
-                <MenuItem eventKey="1">1</MenuItem>
-                <MenuItem eventKey="2">2</MenuItem>
-                <SubMenu title="sub menu" eventKey="3">
-                    <MenuItem eventKey="3-1">sub menu 1</MenuItem>
-                    <MenuItem eventKey="3-2">sub menu 2</MenuItem>
-                </SubMenu>
-                <MenuItem eventKey="4">3</MenuItem>
+                <Menu.Item eventKey="1">1</Menu.Item>
+                <Menu.Item eventKey="2">2</Menu.Item>
+                <Menu.SubMenu title="sub menu" eventKey="3">
+                    <Menu.Item eventKey="3-1">sub menu 1</Menu.Item>
+                    <Menu.Item eventKey="3-2">sub menu 2</Menu.Item>
+                </Menu.SubMenu>
+                <Menu.Item eventKey="4">3</Menu.Item>
             </Menu>
             <Space direction="horizontal" size="large" >
             <AntMenu

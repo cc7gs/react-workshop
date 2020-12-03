@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { AuthProvider, useAuthState } from './components/Auth'
-import Button from './components/Button'
+import {ButtonDemo as Button,AuthProvider, useAuthState } from './components'
 import { GlobalStyle, darkTheme, defaultTheme } from './utils'
 import { ThemeProvider } from 'styled-components';
 

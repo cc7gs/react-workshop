@@ -22,15 +22,17 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/components/index.js",
+  "module": "dist/components/index.js",
   "scripts": {
     "clear": "rimraf ./dist",
     "lint:script": "eslint . --ext '.js,.jsx,.ts,.tsx'",
     "start": "craco start",
-    "build": "npm run clear && craco build && mv build dist",
+    "build": "npm run clear && npm run tsc",
+    "deploy": "npm run clear && craco build && mv build dist",
     "test": "craco test",
     "eject": "craco eject",
+    "tsc":"tsc",
     "prepublishOnly": "npm run build"
   },
   "husky": {

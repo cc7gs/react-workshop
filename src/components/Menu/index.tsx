@@ -16,9 +16,9 @@ export interface MenuProps {
     onSelect?: (selectIndex: React.Key) => void
 };
 
-const Menu: React.FC<MenuProps> = (props) => {
-    const { className,defaultSelectKey='',onSelect, mode = 'vertical', style, children } = props;
-    const [activeKey,setActiveKey]=useState(defaultSelectKey);
+const InternalMenu: React.FC<MenuProps> = (props) => {
+    const { className, defaultSelectKey = '', onSelect, mode = 'vertical', style, children } = props;
+    const [activeKey, setActiveKey] = useState(defaultSelectKey);
 
     const prefixCls = getPrefixCls('menu');
     const classes = classNames(prefixCls,
@@ -28,25 +28,33 @@ const Menu: React.FC<MenuProps> = (props) => {
         },
         className
     );
-    const handleClick=(idx:React.Key)=>{
+    const handleClick = (idx: React.Key) => {
         setActiveKey(idx);
-        if(onSelect){
+        if (onSelect) {
             onSelect(idx);
         }
     }
-    const menuProps={
-        activeKey:activeKey,
-        onSelect:handleClick,
+    const menuProps = {
+        activeKey: activeKey,
+        onSelect: handleClick,
         mode,
     };
     return (
         <ul className={classes} style={style}>
-        <MenuContext.Provider value={menuProps}>
-            {children}
-        </MenuContext.Provider>
+            <MenuContext.Provider value={menuProps}>
+                {children}
+            </MenuContext.Provider>
         </ul>
     )
 }
-Menu.displayName="menu";
+InternalMenu.displayName = "menu";
 
-export {MenuItem,SubMenu,Menu as default}
+export default class Menu extends React.Component<MenuProps,{}> {
+    static Item = MenuItem;
+    static SubMenu = SubMenu;
+
+    render() {
+        return <InternalMenu />
+    }
+}
+// export {MenuItem,SubMenu,Menu as default}

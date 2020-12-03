@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {initalUser,getUser,AuthContext} from './store'
+import {initialUser,getUser,AuthContext} from './store'
 
 
 export const AuthProvider:React.FC=({children})=>{
-    const [state,setState]=useState(initalUser);
+    const [state,setState]=useState(initialUser);
     useEffect(()=>{
         getUser().then(user=>{
             setState({
                 status:'success',
-                error:null,
                 user
             })
         },
-        error=>setState({status:'error',error:error,user:null})
+        error=>setState({status:'error',error:error})
         )
     },[]);
     return(

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import {MenuMode} from './menu';
+import {MenuMode} from '.';
 interface IMenuContext{
     onSelect?:(idx:React.Key)=>void;
     activeKey:React.Key;
