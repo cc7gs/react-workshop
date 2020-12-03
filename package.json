@@ -1,6 +1,6 @@
 {
   "name": "learn-playground",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "build story book reference ant design ",
   "author": "chen",
   "title": "storybook",
@@ -24,6 +24,7 @@
   ],
   "main": "dist/components/index.js",
   "module": "dist/components/index.js",
+  "types": "dist/components/index.d.ts",
   "scripts": {
     "clear": "rimraf ./dist",
     "lint:script": "eslint . --ext '.js,.jsx,.ts,.tsx'",
@@ -32,7 +33,7 @@
     "deploy": "npm run clear && craco build && mv build dist",
     "test": "craco test",
     "eject": "craco eject",
-    "tsc":"tsc",
+    "tsc": "tsc",
     "prepublishOnly": "npm run build"
   },
   "husky": {
@@ -95,6 +96,7 @@
     "rimraf": "^3.0.2",
     "styled-components": "^4.3.2",
     "styled-components-modifiers": "^1.2.5",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "learn-playground":"~0.1.2"
   }
 }
