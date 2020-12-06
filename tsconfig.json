@@ -18,10 +18,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react",
-    "declaration": true
+    "declaration": true,
+    "noEmit": true
   },
   "include": [
     "src/components",
-    "src/utils"
+    "src/utils",
+    "src/types"
   ]
 }
