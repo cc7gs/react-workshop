@@ -5,10 +5,13 @@ import useTool from './hooks/useTool';
 
 import './index.less';
 
-interface ImageProps
+interface CallBackProps {
+    imgRef: React.MutableRefObject<HTMLImageElement | undefined>
+}
+export interface ImageProps
     extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
     src: string;
-    callBack?: () => void;
+    callBack?: ({ imgRef }: CallBackProps) => void;
     wrapperClassName?: string;
     wrapperStyle?: React.CSSProperties;
     placeholder?: React.ReactNode;
@@ -30,7 +33,7 @@ const Image: React.FC<ImageProps> = ({
     placeholder,
     callBack,
     fallback,
-
+    children,
     //Img
     crossOrigin,
     decoding,
@@ -43,24 +46,24 @@ const Image: React.FC<ImageProps> = ({
     const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
     const isError = status === 'error';
 
-    const {scale,imgRef,position,tools,rotate,onMouseDown}=useTool();
+    const { scale, imgRef, position, tools, rotate, onMouseDown } = useTool();
 
 
 
     const onLoad = () => {
         setStatus('normal');
-        callBack && callBack();
+        callBack && callBack({ imgRef });
     };
     const onError = () => {
         setStatus('error');
     };
 
     const getImgRef = (img?: HTMLImageElement | null) => {
-        if(img){
-            imgRef.current=img;
+        if (img) {
+            imgRef.current = img;
         }
         if (status !== 'loading') return;
-        if (img?.complete && (img.naturalWidth || img.naturalHeight)) {            
+        if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
             onLoad();
         }
     };
@@ -112,7 +115,15 @@ const Image: React.FC<ImageProps> = ({
                                 }}
                             />
                         )}
-
+                    {React.isValidElement(children)&&React.Children.only(children) && React.cloneElement(children, {
+                        style: {
+                            transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)`,
+                            ...children.props.style,
+                            pointerEvents:'auto',
+                            cursor: 'grab',
+                        },
+                        onMouseDown
+                    })}
                     {status === 'loading' && (
                         <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
                             {placeholder}
