@@ -43,7 +43,7 @@
     "@emotion/core": "^10.0.20",
     "@frontendmasters/pet": "^1.0.3",
     "@reach/router": "^1.2.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-redux": "^7.1.1",
